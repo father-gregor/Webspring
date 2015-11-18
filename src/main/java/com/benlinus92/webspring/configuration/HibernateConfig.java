@@ -43,7 +43,7 @@ public class HibernateConfig {
 		return dataSource();
 	}
 	@Bean
-	private Properties hibernateProperties() {
+	public Properties hibernateProperties() {
 		Properties properties = new Properties();
 		properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
 		properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
