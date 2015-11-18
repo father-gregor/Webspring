@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 	<title>Spring MVC Tutorial by Crunchify - Hello World Spring MVC
@@ -8,7 +11,7 @@
 	}
 	</style>
 </head>
-<body>${message}
+<body>
 	<br>
 	<br>
 	<div style="font-family: verdana; padding: 10px; border-radius: 10px; font-size: 12px; text-align:center;">
@@ -19,6 +22,7 @@
 			target="_blank">here</a> for all Java and <a
 			href='http://crunchify.com/category/spring-mvc/' target='_blank'>here</a>
 		for all Spring MVC, Web Development examples.<br>
+		<c:out value="${countryCurr.currDate}"/>
 	</div>
 </body>
 </html>
