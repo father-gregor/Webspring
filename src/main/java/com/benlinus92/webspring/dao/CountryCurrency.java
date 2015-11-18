@@ -2,16 +2,24 @@ package com.benlinus92.webspring.dao;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 @Entity
-@Table(name="COUNTRY_")
+@Table(name="CAD")
 public class CountryCurrency {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="ID")
 	private int id;
-	@Column(name="DATE")
-	private String date;
-	@Column(name="CURRENCY")
+	@DateTimeFormat(pattern="dd-MM-yyyy")
+	@Column(name="CURR_DATE", nullable=false)
+	private String currDate;
+	@Column(name="CURRENCY", nullable=false)
 	private String currency;
 	
 	public int getId() {
@@ -20,11 +28,11 @@ public class CountryCurrency {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getDate() {
-		return this.date;
+	public String getCurrDate() {
+		return this.currDate;
 	}
-	public void setDate(String date) {
-		this.date = date;
+	public void setCurrDate(String date) {
+		this.currDate = date;
 	}
 	public String getCurrency() {
 		return this.currency;
