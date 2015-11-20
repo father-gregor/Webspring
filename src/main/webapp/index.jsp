@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
 	<title>Spring MVC Tutorial Series by Crunchify.com</title>
@@ -14,7 +17,7 @@
 			Hey You..!! This is your 1st Spring MCV Tutorial..<br> <br>
 		</h2>
 		<h3>
-			<a href="welcome.html">Click here to See Welcome Message... </a>(to
+			<c:url value="/?currency/CAD/UAH">Click here to See Welcome Message...</c:url> (to
 			check Spring MVC Controller... @RequestMapping("/welcome"))
 		</h3>
 	</div>

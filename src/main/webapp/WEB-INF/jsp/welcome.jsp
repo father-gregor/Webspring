@@ -15,7 +15,11 @@
 	<br>
 	<br>
 	<div style="font-family: verdana; padding: 10px; border-radius: 10px; font-size: 12px; text-align:center;">
- 
+	
+		<c:forEach var="currency" items="${countryCurr}">
+			${currency.key } = ${currency.value}
+		</c:forEach>
+		
 		Spring MCV Tutorial by <a href="http://crunchify.com">Crunchify</a>.
 		Click <a
 			href="http://crunchify.com/category/java-web-development-tutorial/"

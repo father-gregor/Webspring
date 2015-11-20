@@ -1,24 +1,33 @@
 package com.benlinus92.webspring.dao;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
-@Table(name="CAD")
+@Table(name="USD")
 public class CountryCurrency {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="ID")
 	private int id;
-	@DateTimeFormat(pattern="dd-MM-yyyy")
+	@Column(name="COUNTRY", nullable=false)
+	private String country;
+	
+	//@DateTimeFormat(pattern="dd-MM-yyyy")
+	@Temporal(TemporalType.DATE)
 	@Column(name="CURR_DATE", nullable=false)
-	private String currDate;
+	private Calendar currDate;
 	@Column(name="CURRENCY", nullable=false)
 	private String currency;
 	
@@ -28,10 +37,16 @@ public class CountryCurrency {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getCurrDate() {
+	public String getCountry() {
+		return this.country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public Calendar getCurrDate() {
 		return this.currDate;
 	}
-	public void setCurrDate(String date) {
+	public void setCurrDate(Calendar date) {
 		this.currDate = date;
 	}
 	public String getCurrency() {

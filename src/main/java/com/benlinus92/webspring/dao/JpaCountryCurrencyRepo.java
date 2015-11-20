@@ -19,6 +19,14 @@ public class JpaCountryCurrencyRepo implements CountryCurrencyRepo {
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<CountryCurrency> getListByCountryId(String countryId) {
+		Query q = em.createQuery("SELECT r from CountryCurrency r WHERE r.country = :countryId", CountryCurrency.class);
+		q.setParameter("countryId", countryId);
+		//List<CountryCurrency> listCountry1 = (List<CountryCurrency>) q1.getResultList();
+		return (List<CountryCurrency>) q.getResultList();
+	}	
+	@SuppressWarnings("unchecked")
+	@Override
 	public CountryCurrency findById(int id) {
 		Query q = em.createQuery("SELECT r from CountryCurrency r", CountryCurrency.class);
 		List<CountryCurrency> list = (List<CountryCurrency>)q.getResultList();

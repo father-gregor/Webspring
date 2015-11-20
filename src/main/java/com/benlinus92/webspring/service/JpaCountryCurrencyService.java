@@ -1,5 +1,11 @@
 package com.benlinus92.webspring.service;
 
+import java.math.BigDecimal;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +18,26 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	@Autowired
 	private CountryCurrencyRepo dao;
 	
+	@Override
+	public Map<String, String> getListByCountryId(String countryId1,
+			String countryId2) {
+		List<CountryCurrency> listCountry1 = dao.getListByCountryId(countryId1);
+		List<CountryCurrency> listCountry2 = dao.getListByCountryId(countryId2);
+		Map<String, String> result = new LinkedHashMap<String, String>();
+		Iterator<CountryCurrency> it1 = listCountry1.iterator();
+		Iterator<CountryCurrency> it2 = listCountry2.iterator();
+		while(it1.hasNext() & it2.hasNext()) {
+			CountryCurrency country1 = (CountryCurrency) it1.next();
+			CountryCurrency country2 = (CountryCurrency) it2.next();
+			if(country1.getCurrDate().equals(country2.getCurrDate())) {
+				BigDecimal currDec1 = new BigDecimal(country1.getCurrency());
+				BigDecimal currDec2 = new BigDecimal(country2.getCurrency());
+				result.put(country1.getCurrDate().toString(), 
+						currDec2.divide(currDec1).toString());
+			}
+		}
+		return result;
+	}
 	@Override
 	public CountryCurrency findById(int id) {
 		return dao.findById(id);
