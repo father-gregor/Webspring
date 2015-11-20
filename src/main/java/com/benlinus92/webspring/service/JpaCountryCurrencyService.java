@@ -1,6 +1,7 @@
 package com.benlinus92.webspring.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,8 +33,12 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			if(country1.getCurrDate().equals(country2.getCurrDate())) {
 				BigDecimal currDec1 = new BigDecimal(country1.getCurrency());
 				BigDecimal currDec2 = new BigDecimal(country2.getCurrency());
+				//Formula: 1 USD = x FirstCurrency
+				//1 USD = y SecondCurrency
+				//1 FirstCurrency = z AnotherCurrency
+				//Equation: z = (1 * y) / x
 				result.put(country1.getCurrDate().toString(), 
-						currDec2.divide(currDec1).toString());
+						currDec2.divide(currDec1, 3, RoundingMode.HALF_UP).toString()); 
 			}
 		}
 		return result;
