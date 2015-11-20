@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
 	<title>Spring MVC Tutorial by Crunchify - Hello World Spring MVC
@@ -17,9 +18,8 @@
 	<div style="font-family: verdana; padding: 10px; border-radius: 10px; font-size: 12px; text-align:center;">
 	
 		<c:forEach var="currency" items="${countryCurr}">
-			${currency.key.get(Calendar.DAY_OF_MONTH)} = ${currency.value}
+			<fmt:formatDate pattern="dd-MM-yyyy" value="${currency.key.time}" /> = ${currency.value}
 		</c:forEach>
-		
 		Spring MCV Tutorial by <a href="http://crunchify.com">Crunchify</a>.
 		Click <a
 			href="http://crunchify.com/category/java-web-development-tutorial/"

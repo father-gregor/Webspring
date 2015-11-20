@@ -29,7 +29,6 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 		Map<Calendar, String> result = new LinkedHashMap<Calendar, String>();
 		Iterator<CountryCurrency> it1 = listCountry1.iterator();
 		Iterator<CountryCurrency> it2 = listCountry2.iterator();
-		
 		while(it1.hasNext() & it2.hasNext()) {
 			CountryCurrency country1 = (CountryCurrency) it1.next();
 			CountryCurrency country2 = (CountryCurrency) it2.next();
