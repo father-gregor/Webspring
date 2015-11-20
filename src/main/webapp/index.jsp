@@ -17,8 +17,7 @@
 			Hey You..!! This is your 1st Spring MCV Tutorial..<br> <br>
 		</h2>
 		<h3>
-			<c:url value="/?currency/CAD/UAH">Click here to See Welcome Message...</c:url> (to
-			check Spring MVC Controller... @RequestMapping("/welcome"))
+			<a href='<c:out value="/currency-CAD-UAH" />'>CLICK THAT</a>
 		</h3>
 	</div>
 </body>

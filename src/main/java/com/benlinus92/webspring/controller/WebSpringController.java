@@ -15,6 +15,7 @@ import com.benlinus92.webspring.model.Parser;
 import com.benlinus92.webspring.service.CountryCurrencyService;
 
 @Controller
+@RequestMapping("/")
 public class WebSpringController {
 	private static final String OPEN_API_ID = "8e1db3f31493445fa11e5a559a34312a";
 	private static final String OPEN_API_LATEST = "https://openexchangerates.org/api/latest.json?app_id=";
@@ -22,7 +23,7 @@ public class WebSpringController {
 	@Autowired
 	CountryCurrencyService service;
 	
-	@RequestMapping(value="/?currency/{countryId1}/{countryId2}", method=RequestMethod.GET)
+	@RequestMapping(value="/currency-{countryId1}-{countryId2}", method=RequestMethod.GET)
 	public String requestCurrency(@PathVariable String countryId1, @PathVariable String countryId2, Model model) {
 		String message = "Testing spring in web Openshift";
 		String request = "http://query.yahooapis.com/v1/public/yql?format=xml&q=select%20*%20from%20" +
