@@ -9,6 +9,8 @@ import com.benlinus92.webspring.dao.CountryCurrency;
 public interface CountryCurrencyService {
 	
 	Map<Calendar,String> getListByCountryId(String countryId1, String countryId2);
+	void writeJsonToDatabase(String url);
+	String readJsonFromUrl(String url);
 	CountryCurrency findById(int id);
 	CountryCurrency findByName(String country);
 	void updateCountryCurrencyByName(String country);
