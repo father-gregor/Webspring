@@ -26,8 +26,8 @@
 			target="_blank">here</a> for all Java and <a
 			href='http://crunchify.com/category/spring-mvc/' target='_blank'>here</a>
 		for all Spring MVC, Web Development examples.<br>
-		${message}
-		{message}
+		<c:out value="${message}" />
+		${message2}
 	</div>
 </body>
 </html>

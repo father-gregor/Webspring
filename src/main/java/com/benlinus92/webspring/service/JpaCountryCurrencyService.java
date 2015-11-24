@@ -17,6 +17,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.benlinus92.webspring.dao.CountryCurrency;
@@ -26,13 +27,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 @Service("employeeService")
-@PropertySource("classpath:resources/update.properties")
+@PropertySource(value="classpath:update.properties",ignoreResourceNotFound = true)
 public class JpaCountryCurrencyService implements CountryCurrencyService {
 
 	@Autowired
+	private Environment environment;
+	@Autowired
 	private CountryCurrencyRepo dao;
 
-	@Value("{updated}")
+	@Value("${updated}")
 	public String msg;
 	@Override
 	public Map<Calendar, String> getListByCountryId(String countryId1,

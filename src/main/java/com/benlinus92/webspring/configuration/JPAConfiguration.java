@@ -29,7 +29,6 @@ public class JPAConfiguration {
 		em.setDataSource(dataSource());
 		em.setPackagesToScan(new String[] {"com.benlinus92.webspring.dao"});
 		em.setJpaProperties(hibernateProperties());
-		
 		return em; 
 	}
 	@Bean
