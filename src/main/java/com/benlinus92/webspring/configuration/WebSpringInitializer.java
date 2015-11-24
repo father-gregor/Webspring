@@ -16,6 +16,7 @@ public class WebSpringInitializer extends AbstractAnnotationConfigDispatcherServ
 
 	@Override
 	protected String[] getServletMappings() {
+		System.setProperty("updated", "11-12-13");
 		return new String[] {"/"};
 	}
 }

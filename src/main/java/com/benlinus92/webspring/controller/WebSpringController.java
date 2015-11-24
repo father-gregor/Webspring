@@ -72,6 +72,7 @@ public class WebSpringController {
 		     //OutputStream out = new FileOutputStream( r.getFile() );
 		     byte[] encoded = Files.readAllBytes(Paths.get(r.getURI()));
 		     w = new String(encoded, Charset.defaultCharset());
+		     w = System.getProperty("updated");
 		     //w = r.getFile().getAbsolutePath();
 		     // write into it
 		     //props.store(out, "commentss");
@@ -82,6 +83,7 @@ public class WebSpringController {
 		//Properties props = new Properties();
 		//Resource r = new ClassPathResource("update.properties");
 		//w = props.getProperty("updated");
+		//System.setProperty("updated", "SUCK SUCK");
 		model.addAttribute("message2", w);
 		//String json = par.performRequest(OPEN_API_LATEST + OPEN_API_ID);
 		//return new ModelAndView("welcome", "message", json);
