@@ -17,7 +17,7 @@
 			Hey You..!! This is your 1st Spring MCV Tutorial..<br> <br>
 		</h2>
 		<h3>
-			<a href='<c:out value="/currency-CAD-UAH" />'>CLICK THAT</a>
+			<a href='<c:out value="/currency-CAD-UAH-10" />'>CLICK THAT</a>
 			<a href="/welcome">OR THAT</a>
 		</h3>
 	</div>

@@ -44,15 +44,14 @@ public class WebSpringController {
 	@Autowired
 	private Environment environment;
 	
-	@RequestMapping(value="/currency-{countryId1}-{countryId2}", method=RequestMethod.GET)
-	public String requestCurrency(@PathVariable String countryId1, @PathVariable String countryId2, Model model) {
-		String message = "Testing spring in web Openshift";
-		String request = "http://query.yahooapis.com/v1/public/yql?format=xml&q=select%20*%20from%20" +
-                "yahoo.finance.xchange%20where%20pair%20in%20(\"USDEUR\",%20\"USDUAH\",%20\"USDRUB\")&env=store://datatables.org/alltableswithkeys";
+	@RequestMapping(value="/currency-{countryId1}-{countryId2}-{daysCount}", method=RequestMethod.GET)
+	public ModelAndView requestCurrency(@PathVariable String countryId1, @PathVariable String countryId2, 
+			@PathVariable String daysCount, Model model) {
+		
 		model.addAttribute("countryCurr",service.getListByCountryId(countryId1, countryId2));
-		//String json = par.performRequest(OPEN_API_LATEST + OPEN_API_ID);
-		//return new ModelAndView("welcome", "message", json);
-		return "welcome";
+		return new ModelAndView("currency");
+		//("welcome", "message", json);
+		//return "welcome";
 	}
 	@RequestMapping("/json-{date}")
 	public String requestJson(@PathVariable String date, Model model) {
@@ -79,7 +78,7 @@ public class WebSpringController {
 		     //w = props.getProperty("updated");
 		     
 		} catch(IOException e) { w = e.getMessage();}
-		model.addAttribute("message", environment.getProperty("updated"));
+		//model.addAttribute("message", environment.getProperty("updated"));
 		//Properties props = new Properties();
 		//Resource r = new ClassPathResource("update.properties");
 		//w = props.getProperty("updated");
