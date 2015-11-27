@@ -8,7 +8,10 @@ import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,6 +23,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import com.benlinus92.webspring.configuration.AppConstants;
 import com.benlinus92.webspring.dao.CountryCurrency;
 import com.benlinus92.webspring.dao.CountryCurrencyRepo;
 import com.benlinus92.webspring.json.Base;
@@ -63,12 +67,15 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 		return result;
 	}
 	@Override
-	public void writeJsonToDatabase(String apiURL) {
-		String apiJson = this.readJsonFromUrl(apiURL);
+	public void writeJsonToDatabase(String apiURL, Calendar date) {
+		String apiJson = readJsonFromUrl(apiURL);
 		Gson gson = new Gson();
 		Base baseJson = gson.fromJson(apiJson, Base.class);
 		for(Map.Entry<String, String> entry : baseJson.getQuotes().entrySet()) {
-			System.out.println(entry.getKey() + ":" + entry.getValue());
+			String country = entry.getKey().replaceFirst("USD", "");
+			String currency = entry.getValue();
+			CountryCurrency entity = new CountryCurrency(country, currency, date);
+			dao.insertCurrency(entity);
 		}
 	}
 	@Override
@@ -100,6 +107,28 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 		return sb.toString();
 	}
 	@Override
+	public void updateDatabaseOnDemand(String date) {
+		if(isDatabaseOutOfDate(date) == true) {
+			Calendar dbDate = Calendar.getInstance();
+			Calendar userDate = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+			try {
+				dbDate.setTime(sdf.parse(System.getProperty("updated")));
+				userDate.setTime(sdf.parse(date));
+			} catch(ParseException e) { 
+				e.printStackTrace();
+			}
+			
+			dbDate.add(Calendar.DATE, 1);
+			while(dbDate.compareTo(userDate) <= 0) {
+				String urlDate = sdf.format(dbDate.getTime());
+				String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
+				writeJsonToDatabase(url, dbDate);
+				dbDate.add(Calendar.DATE, 1);
+			}
+		}
+	}
+	@Override
 	public CountryCurrency findById(int id) {
 		return dao.findById(id);
 	}
@@ -117,5 +146,17 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	public void deleteCountryCurrency() {
 		// TODO Auto-generated method stub
 		
+	}
+	private boolean isDatabaseOutOfDate(String date) {
+		Calendar dbDate = Calendar.getInstance();
+		Calendar userDate = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		try {
+			dbDate.setTime(sdf.parse(System.getProperty("updated")));
+			userDate.setTime(sdf.parse(date));
+		} catch(ParseException e) { 
+			e.printStackTrace();
+		}
+		return dbDate.before(userDate);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,14 @@ public class JpaCountryCurrencyRepo implements CountryCurrencyRepo {
 		q.setParameter("countryId", countryId);
 		return (List<CountryCurrency>) q.getResultList();
 	}	
+	@Override
+	public void insertCurrency(CountryCurrency entity) {
+		try {
+			em.persist(entity);
+		} catch(PersistenceException e) {
+			e.printStackTrace();
+		}
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public CountryCurrency findById(int id) {

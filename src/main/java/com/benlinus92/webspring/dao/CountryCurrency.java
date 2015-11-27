@@ -23,13 +23,18 @@ public class CountryCurrency {
 	private int id;
 	@Column(name="COUNTRY", nullable=false)
 	private String country;
-	
 	//@DateTimeFormat(pattern="dd-MM-yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name="CURR_DATE", nullable=false)
 	private Calendar currDate;
 	@Column(name="CURRENCY", nullable=false)
 	private String currency;
+	
+	public CountryCurrency(String country, String currency, Calendar date) {
+		this.country = country;
+		this.currency = currency;
+		this.currDate = date;
+	}
 	
 	public int getId() {
 		return this.id;

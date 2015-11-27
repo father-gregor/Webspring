@@ -11,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Properties;
 
 import org.springframework.aop.interceptor.PerformanceMonitorInterceptor;
@@ -34,10 +36,6 @@ import com.benlinus92.webspring.service.CountryCurrencyService;
 @RequestMapping("/")
 @PropertySource(value="classpath:update.properties",ignoreResourceNotFound = true)
 public class WebSpringController {
-	private static final String CURR_API_LIVE = "http://apilayer.net/api/live?";
-	private static final String CURR_API_HISTORY = "http://apilayer.net/api/historical?date=";
-	private static final String CURR_API_ID = "&access_key=194a276698ccbe38f3d622a013f4dc64";
-	private static final String CURR_API_SET = "&currencies="; 
 	
 	@Autowired
 	CountryCurrencyService service;
@@ -47,7 +45,7 @@ public class WebSpringController {
 	@RequestMapping(value="/currency-{countryId1}-{countryId2}-{daysCount}", method=RequestMethod.GET)
 	public ModelAndView requestCurrency(@PathVariable String countryId1, @PathVariable String countryId2, 
 			@PathVariable String daysCount, Model model) {
-		
+		service.updateDatabaseOnDemand(daysCount);
 		model.addAttribute("countryCurr",service.getListByCountryId(countryId1, countryId2));
 		return new ModelAndView("currency");
 		//("welcome", "message", json);
@@ -55,12 +53,12 @@ public class WebSpringController {
 	}
 	@RequestMapping("/json-{date}")
 	public String requestJson(@PathVariable String date, Model model) {
-		service.writeJsonToDatabase(CURR_API_HISTORY + date + CURR_API_ID
-				+ CURR_API_SET + "AUD,CHF,EUR,GBP,PLN");
+		//service.writeJsonToDatabase(CURR_API_HISTORY + date + CURR_API_ID
+			//	+ CURR_API_SET + "AUD,CHF,EUR,GBP,PLN");
 		return "welcome";
 	}
-	@RequestMapping("/welcome")
-	public String viewText(Model model) {
+	@RequestMapping("/welcome-{date}")
+	public String viewText(@PathVariable String date, Model model) {
 		String w = "working";
 		try {
 			Resource r = new ClassPathResource("update.properties");
@@ -78,6 +76,7 @@ public class WebSpringController {
 		     //w = props.getProperty("updated");
 		     
 		} catch(IOException e) { w = e.getMessage();}
+		service.updateDatabaseOnDemand(date);
 		//model.addAttribute("message", environment.getProperty("updated"));
 		//Properties props = new Properties();
 		//Resource r = new ClassPathResource("update.properties");
