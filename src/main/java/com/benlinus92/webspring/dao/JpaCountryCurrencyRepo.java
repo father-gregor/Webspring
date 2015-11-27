@@ -28,6 +28,8 @@ public class JpaCountryCurrencyRepo implements CountryCurrencyRepo {
 	@Override
 	public void insertCurrency(CountryCurrency entity) {
 		try {
+			System.out.println("IN DAO Date: " + entity.getCurrDate().MONTH);
+			System.out.println("IN DAO Date: " + entity.getCurrDate().toString());
 			em.persist(entity);
 		} catch(PersistenceException e) {
 			e.printStackTrace();

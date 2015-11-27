@@ -72,7 +72,15 @@ public class WebSpringController {
 		     w = System.getProperty("updated");
 		     //w = r.getFile().getAbsolutePath();
 		     // write into it
-		     //props.store(out, "commentss");
+		     InputStream in = getClass().getClassLoader().getResourceAsStream("update.properties");
+		     Properties prop = new Properties();
+		     prop.load(in);
+		     in.close();
+		     OutputStream out = new FileOutputStream(r.getFile()); 
+		     props.setProperty("date", date);
+		     props.store(out, null);
+		     out.close();
+		     System.out.println(date);
 		     //w = props.getProperty("updated");
 		     
 		} catch(IOException e) { w = e.getMessage();}

@@ -23,7 +23,7 @@ public class CountryCurrency {
 	private int id;
 	@Column(name="COUNTRY", nullable=false)
 	private String country;
-	//@DateTimeFormat(pattern="dd-MM-yyyy")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	@Column(name="CURR_DATE", nullable=false)
 	private Calendar currDate;

@@ -111,14 +111,17 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 		if(isDatabaseOutOfDate(date) == true) {
 			Calendar dbDate = Calendar.getInstance();
 			Calendar userDate = Calendar.getInstance();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			try {
+				//Date d = sdf.parse(System.getProperty("updated"));
 				dbDate.setTime(sdf.parse(System.getProperty("updated")));
+				//d = sdf.parse(date);
 				userDate.setTime(sdf.parse(date));
 			} catch(ParseException e) { 
 				e.printStackTrace();
 			}
-			
+			System.out.println("XXXXXXXXXX 1234567768697 XXXXXXXXXXXX 894653454746787 Date: " + date);
+			System.out.println("XXXXXXXXXX 1234567768697 XXXXXXXXXXXX 894653454746787 Date: " + dbDate.get(Calendar.MONTH));
 			dbDate.add(Calendar.DATE, 1);
 			while(dbDate.compareTo(userDate) <= 0) {
 				String urlDate = sdf.format(dbDate.getTime());
@@ -126,6 +129,7 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 				writeJsonToDatabase(url, dbDate);
 				dbDate.add(Calendar.DATE, 1);
 			}
+			
 		}
 	}
 	@Override
