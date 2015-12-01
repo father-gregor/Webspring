@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,11 +31,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.benlinus92.webspring.configuration.AppConstants;
 import com.benlinus92.webspring.service.CountryCurrencyService;
 
 @Controller
 @RequestMapping("/")
-@PropertySource(value="classpath:update.properties",ignoreResourceNotFound = true)
+@PropertySource(value="file:" + AppConstants.PROPERTIES_PATH,ignoreResourceNotFound = true)
 public class WebSpringController {
 	
 	@Autowired
@@ -59,7 +61,32 @@ public class WebSpringController {
 	}
 	@RequestMapping("/welcome-{date}")
 	public String viewText(@PathVariable String date, Model model) {
-		service.updateDatabaseOnDemand(date);
+		Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
+		//InputStream in = getClass().getClassLoader().getResourceAsStream("update.properties");
+		Properties props = new Properties();
+		Properties props2 = new Properties();
+		Properties props3 = new Properties();
+		try {
+			InputStream in = r.getInputStream();
+			props.load(in);
+			System.out.println("XXXXX XXXXXX XXXXX UPDATED-PROPS: " + props.getProperty("updated"));
+			System.out.println(r.getFile().getAbsolutePath());
+			in.close();
+			//Resource r = new ClassPathResource("update.properties");
+			OutputStream out = new FileOutputStream(r.getFile()); 
+			props2.setProperty("updated", "2015-05-19");
+			props2.store(out, null);
+			out.close();
+			in = r.getInputStream();
+			System.out.println(r.getFile().getAbsolutePath());
+			props3.load(in);
+			System.out.println("XXXXX XXXXXX XXXXX UPDATED-SYSTEM: " + System.getProperty("updated"));
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//service.updateDatabaseOnDemand(date);
 		String w = System.getProperty("updated");
 		model.addAttribute("message2", w);
 		//return new ModelAndView("welcome", "message", json);

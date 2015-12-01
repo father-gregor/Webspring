@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -27,13 +28,12 @@ public class WebSpringInitializer extends AbstractAnnotationConfigDispatcherServ
 
 	@Override
 	protected String[] getServletMappings() {
-		Resource r = new ClassPathResource("update.properties");
+		Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
 		Properties props = new Properties();
 		try {
-			InputStream stream = getClass().getClassLoader().getResourceAsStream("update.properties");
+			InputStream stream = r.getInputStream();
 			props.load(stream);
 			System.setProperty("updated", props.getProperty("updated"));
-			System.out.println(System.getProperty("updated"));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
