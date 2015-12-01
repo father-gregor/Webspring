@@ -33,6 +33,7 @@ public class WebSpringInitializer extends AbstractAnnotationConfigDispatcherServ
 			InputStream stream = getClass().getClassLoader().getResourceAsStream("update.properties");
 			props.load(stream);
 			System.setProperty("updated", props.getProperty("updated"));
+			System.out.println(System.getProperty("updated"));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

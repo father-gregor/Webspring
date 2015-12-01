@@ -59,38 +59,9 @@ public class WebSpringController {
 	}
 	@RequestMapping("/welcome-{date}")
 	public String viewText(@PathVariable String date, Model model) {
-		String w = "working";
-		try {
-			Resource r = new ClassPathResource("update.properties");
-			Properties props = new Properties();
-		     props.setProperty("updated", "15-15-2015");
-		     // get or create the file
-		     //File f = new File("update.properties");
-		     //OutputStream out = new FileOutputStream( r.getFile() );
-		     byte[] encoded = Files.readAllBytes(Paths.get(r.getURI()));
-		     w = new String(encoded, Charset.defaultCharset());
-		     w = System.getProperty("updated");
-		     //w = r.getFile().getAbsolutePath();
-		     // write into it
-		     InputStream in = getClass().getClassLoader().getResourceAsStream("update.properties");
-		     Properties prop = new Properties();
-		     prop.load(in);
-		     in.close();
-		     OutputStream out = new FileOutputStream(r.getFile()); 
-		     props.setProperty("date", date);
-		     props.store(out, null);
-		     out.close();
-		     //w = props.getProperty("updated");
-		     
-		} catch(IOException e) { w = e.getMessage();}
 		service.updateDatabaseOnDemand(date);
-		//model.addAttribute("message", environment.getProperty("updated"));
-		//Properties props = new Properties();
-		//Resource r = new ClassPathResource("update.properties");
-		//w = props.getProperty("updated");
-		//System.setProperty("updated", "SUCK SUCK");
+		String w = System.getProperty("updated");
 		model.addAttribute("message2", w);
-		//String json = par.performRequest(OPEN_API_LATEST + OPEN_API_ID);
 		//return new ModelAndView("welcome", "message", json);
 		return "welcome";
 	}
