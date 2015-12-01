@@ -1,7 +1,11 @@
 package com.benlinus92.webspring.service;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,11 +20,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import com.benlinus92.webspring.configuration.AppConstants;
@@ -113,15 +120,11 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			Calendar userDate = Calendar.getInstance();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			try {
-				//Date d = sdf.parse(System.getProperty("updated"));
 				dbDate.setTime(sdf.parse(System.getProperty("updated")));
-				//d = sdf.parse(date);
 				userDate.setTime(sdf.parse(date));
 			} catch(ParseException e) { 
 				e.printStackTrace();
 			}
-			System.out.println("XXXXXXXXXX 1234567768697 XXXXXXXXXXXX 894653454746787 Date: " + date);
-			System.out.println("XXXXXXXXXX 1234567768697 XXXXXXXXXXXX 894653454746787 Date: " + dbDate.get(Calendar.MONTH));
 			dbDate.add(Calendar.DATE, 1);
 			while(dbDate.compareTo(userDate) <= 0) {
 				String urlDate = sdf.format(dbDate.getTime());
@@ -129,7 +132,20 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 				writeJsonToDatabase(url, dbDate);
 				dbDate.add(Calendar.DATE, 1);
 			}
-			
+			try {
+				Resource r = new ClassPathResource("update.properties");
+				Properties props = new Properties();
+				InputStream in = getClass().getClassLoader().getResourceAsStream("update.properties");
+			    props.load(in);
+			    in.close();
+			    OutputStream out = new FileOutputStream(r.getFile()); 
+			    props.setProperty("updated", date);
+			    System.setProperty("updated", date);
+			    props.store(out, null);
+			    out.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	@Override
@@ -154,7 +170,7 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	private boolean isDatabaseOutOfDate(String date) {
 		Calendar dbDate = Calendar.getInstance();
 		Calendar userDate = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			dbDate.setTime(sdf.parse(System.getProperty("updated")));
 			userDate.setTime(sdf.parse(date));

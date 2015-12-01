@@ -80,7 +80,6 @@ public class WebSpringController {
 		     props.setProperty("date", date);
 		     props.store(out, null);
 		     out.close();
-		     System.out.println(date);
 		     //w = props.getProperty("updated");
 		     
 		} catch(IOException e) { w = e.getMessage();}
