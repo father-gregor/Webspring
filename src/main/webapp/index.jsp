@@ -18,7 +18,7 @@
 		</h2>
 		<h3>
 			<a href='<c:out value="/currency-CAD-UAH-10" />'>CLICK THAT</a>
-			<a href='<c:out value="/welcome-2015-12-01" />'>OR THAT</a>
+			<a href='<c:out value="/welcome-2015-12-02" />'>OR THAT</a>
 		</h3>
 	</div>
 </body>

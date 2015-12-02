@@ -61,32 +61,11 @@ public class WebSpringController {
 	}
 	@RequestMapping("/welcome-{date}")
 	public String viewText(@PathVariable String date, Model model) {
-		Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
-		//InputStream in = getClass().getClassLoader().getResourceAsStream("update.properties");
-		Properties props = new Properties();
-		Properties props2 = new Properties();
-		Properties props3 = new Properties();
-		try {
-			InputStream in = r.getInputStream();
-			props.load(in);
-			System.out.println("XXXXX XXXXXX XXXXX UPDATED-PROPS: " + props.getProperty("updated"));
-			System.out.println(r.getFile().getAbsolutePath());
-			in.close();
-			//Resource r = new ClassPathResource("update.properties");
-			OutputStream out = new FileOutputStream(r.getFile()); 
-			props2.setProperty("updated", "2015-05-19");
-			props2.store(out, null);
-			out.close();
-			in = r.getInputStream();
-			System.out.println(r.getFile().getAbsolutePath());
-			props3.load(in);
-			System.out.println("XXXXX XXXXXX XXXXX UPDATED-SYSTEM: " + System.getProperty("updated"));
-			in.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//service.updateDatabaseOnDemand(date);
+		System.out.println("Before database update: " + System.getProperty("updated"));
+		long startTime = System.currentTimeMillis();
+		service.updateDatabaseOnDemand(date);
+		long endTime = System.currentTimeMillis();
+		System.out.println("Before database update: " + System.getProperty("updated") + "; exec time = " + (endTime-startTime));
 		String w = System.getProperty("updated");
 		model.addAttribute("message2", w);
 		//return new ModelAndView("welcome", "message", json);

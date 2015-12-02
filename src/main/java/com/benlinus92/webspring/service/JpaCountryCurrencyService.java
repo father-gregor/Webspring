@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -133,16 +134,13 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 				dbDate.add(Calendar.DATE, 1);
 			}
 			try {
-				Resource r = new ClassPathResource("update.properties");
+				System.setProperty("updated", date);
 				Properties props = new Properties();
-				InputStream in = getClass().getClassLoader().getResourceAsStream("update.properties");
-			    props.load(in);
-			    in.close();
-			    OutputStream out = new FileOutputStream(r.getFile()); 
-			    props.setProperty("updated", date);
-			    System.setProperty("updated", date);
-			    props.store(out, null);
-			    out.close();
+				Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
+				OutputStream out = new FileOutputStream(r.getFile()); 
+				props.setProperty("updated", date);
+				props.store(out, null);
+				out.close();
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
