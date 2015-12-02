@@ -3,10 +3,8 @@ package com.benlinus92.webspring.service;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -15,7 +13,6 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,10 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -36,10 +30,8 @@ import com.benlinus92.webspring.dao.CountryCurrency;
 import com.benlinus92.webspring.dao.CountryCurrencyRepo;
 import com.benlinus92.webspring.json.Base;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 @Service("employeeService")
-@PropertySource(value="classpath:update.properties",ignoreResourceNotFound = true)
 public class JpaCountryCurrencyService implements CountryCurrencyService {
 
 	@Autowired
@@ -47,8 +39,6 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	@Autowired
 	private CountryCurrencyRepo dao;
 
-	@Value("${updated}")
-	public String msg;
 	@Override
 	public Map<Calendar, String> getListByCountryId(String countryId1,
 			String countryId2) {
@@ -73,6 +63,38 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			}
 		}
 		return result;
+	}
+	@Override
+	public void updateDatabaseOnDemand(String date) {
+		if(isDatabaseOutOfDate(date) == true) {
+			Calendar dbDate = Calendar.getInstance();
+			Calendar userDate = Calendar.getInstance();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				dbDate.setTime(sdf.parse(System.getProperty("updated")));
+				userDate.setTime(sdf.parse(date));
+			} catch(ParseException e) { 
+				e.printStackTrace();
+			}
+			dbDate.add(Calendar.DATE, 1);
+			while(dbDate.compareTo(userDate) <= 0) {
+				String urlDate = sdf.format(dbDate.getTime());
+				String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
+				writeJsonToDatabase(url, dbDate);
+				dbDate.add(Calendar.DATE, 1);
+			}
+			try {
+				System.setProperty("updated", date);
+				Properties props = new Properties();
+				Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
+				OutputStream out = new FileOutputStream(r.getFile()); 
+				props.setProperty("updated", date);
+				props.store(out, null);
+				out.close();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	@Override
 	public void writeJsonToDatabase(String apiURL, Calendar date) {
@@ -113,57 +135,6 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			throw new RuntimeException("Exception while calling URL:"+ apiURL, e);
 		} 
 		return sb.toString();
-	}
-	@Override
-	public void updateDatabaseOnDemand(String date) {
-		if(isDatabaseOutOfDate(date) == true) {
-			Calendar dbDate = Calendar.getInstance();
-			Calendar userDate = Calendar.getInstance();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				dbDate.setTime(sdf.parse(System.getProperty("updated")));
-				userDate.setTime(sdf.parse(date));
-			} catch(ParseException e) { 
-				e.printStackTrace();
-			}
-			dbDate.add(Calendar.DATE, 1);
-			while(dbDate.compareTo(userDate) <= 0) {
-				String urlDate = sdf.format(dbDate.getTime());
-				String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
-				writeJsonToDatabase(url, dbDate);
-				dbDate.add(Calendar.DATE, 1);
-			}
-			try {
-				System.setProperty("updated", date);
-				Properties props = new Properties();
-				Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
-				OutputStream out = new FileOutputStream(r.getFile()); 
-				props.setProperty("updated", date);
-				props.store(out, null);
-				out.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	@Override
-	public CountryCurrency findById(int id) {
-		return dao.findById(id);
-	}
-	@Override
-	public CountryCurrency findByName(String country) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void updateCountryCurrencyByName(String country) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void deleteCountryCurrency() {
-		// TODO Auto-generated method stub
-		
 	}
 	private boolean isDatabaseOutOfDate(String date) {
 		Calendar dbDate = Calendar.getInstance();

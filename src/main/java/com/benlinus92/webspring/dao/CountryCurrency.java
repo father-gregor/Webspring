@@ -1,7 +1,6 @@
 package com.benlinus92.webspring.dao;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
