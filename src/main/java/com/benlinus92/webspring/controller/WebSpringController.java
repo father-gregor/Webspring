@@ -26,7 +26,6 @@ public class WebSpringController {
 		service.updateDatabaseOnDemand(daysCount);
 		model.addAttribute("countryCurr",service.getListByCountryId(countryId1, countryId2));
 		return new ModelAndView("currency");
-		//("welcome", "message", json);
 		//return "welcome";
 	}
 	@RequestMapping("/json-{date}")
