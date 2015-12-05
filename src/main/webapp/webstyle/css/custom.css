@@ -1,0 +1,47 @@
+@font-face {
+	font-family: Nord-Medium;
+	src: url(../fonts/intro_cond_light_free.otf);
+}
+body {
+	min-width: 547px;
+}
+.navbar-default {
+	position: absolute;
+	top: 0;
+    right: 0;
+    left: 0;
+    z-index: 20;
+	background-color: transparent;
+	border: 0;
+}
+header {
+	background: #1a1a1a;
+	color: #fff;
+	font-family: Nord-Medium;
+	font-size: 45px;
+}
+.intro-cont {
+	padding-top: 300px;
+	padding-bottom: 200px;
+}
+.intro-text {
+	text-align: center;
+}
+.intro-welcome {
+	color: #72c459;
+	font-size: 65px;
+}
+.intro-choice {
+	font-size: 50px;
+}
+a.show-btn {
+	border: 1px solid;
+	color: #fff;
+	border-color: #fff;
+	padding: 8px 12px;
+	font-size: 35px;
+}
+#placeholder {
+	width: 400px;
+	height: 300px;
+}
