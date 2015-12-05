@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -29,6 +30,7 @@ import com.benlinus92.webspring.configuration.AppConstants;
 import com.benlinus92.webspring.dao.CountryCurrency;
 import com.benlinus92.webspring.dao.CountryCurrencyRepo;
 import com.benlinus92.webspring.json.Base;
+import com.benlinus92.webspring.json.DateCurrency;
 import com.google.gson.Gson;
 
 @Service("employeeService")
@@ -40,11 +42,12 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	private CountryCurrencyRepo dao;
 
 	@Override
-	public Map<Calendar, String> getListByCountryId(String countryId1,
+	public List<DateCurrency> getListByCountryId(String countryId1,
 			String countryId2) {
 		
 		List<CountryCurrency> listCountry1 = dao.getListByCountryId(countryId1);
 		List<CountryCurrency> listCountry2 = dao.getListByCountryId(countryId2);
+		List<DateCurrency> currencyList = new ArrayList<DateCurrency>();
 		Map<Calendar, String> result = new LinkedHashMap<Calendar, String>();
 		Iterator<CountryCurrency> it1 = listCountry1.iterator();
 		Iterator<CountryCurrency> it2 = listCountry2.iterator();
@@ -58,11 +61,15 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 				//1 USD = y SecondCurrency
 				//1 FirstCurrency = z AnotherCurrency
 				//Equation: z = (1 * y) / x
+				DateCurrency dc = new DateCurrency();
+				dc.setCurrency(currDec2.divide(currDec1, 3, RoundingMode.HALF_UP).toString());
+				dc.setDate(this.getStringFromCalendar(country1.getCurrDate()));
+				currencyList.add(dc);
 				result.put(country1.getCurrDate(), 
 						currDec2.divide(currDec1, 3, RoundingMode.HALF_UP).toString()); 
 			}
 		}
-		return result;
+		return currencyList;
 	}
 	@Override
 	public void updateDatabaseOnDemand(String date) {
@@ -147,5 +154,9 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			e.printStackTrace();
 		}
 		return dbDate.before(userDate);
+	}
+	private String getStringFromCalendar(Calendar date) {
+		SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+		return formatDate.format(date.getTime());
 	}
 }

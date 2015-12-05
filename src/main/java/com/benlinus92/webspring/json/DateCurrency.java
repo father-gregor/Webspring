@@ -16,4 +16,7 @@ public class DateCurrency {
 	public void setDate(String date) {
 		this.date = date;
 	}
+	public String toString() {
+		return this.currency + " - " + this.date;
+	}
 }

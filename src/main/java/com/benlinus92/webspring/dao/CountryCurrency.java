@@ -29,6 +29,7 @@ public class CountryCurrency {
 	@Column(name="CURRENCY", nullable=false)
 	private String currency;
 	
+	public CountryCurrency() { }
 	public CountryCurrency(String country, String currency, Calendar date) {
 		this.country = country;
 		this.currency = currency;
@@ -58,5 +59,8 @@ public class CountryCurrency {
 	}
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+	public String toString() {
+		return this.country + " - " + this.currency + " - " + this.currDate.get(Calendar.MONTH + 1);
 	}
 }
