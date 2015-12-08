@@ -35,12 +35,13 @@
 				<div id="placeholder">
 					
 				</div>
+				<div id="loading-cont"></div>
 			</div>
 		</div>
 	</div>
 	<div id="tests" style="text-align:center">
 		<h2>
-			Hey You..!! This is your 1st Spring MCV Tutorial..<br> <br>
+			Hey You..!! T his is your 1st Spring MCV Tutorial..<br> <br>
 		</h2>
 		<h3>
 			<a href='<c:out value="/currency-CAD-UAH-10" />'>CLICK THAT</a>
@@ -51,6 +52,8 @@
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	<script src="<c:url value='webstyle/js/index.js' />"></script>
 	<script src="<c:url value='webstyle/js/flot/jquery.flot.js' />"></script>
+	<script src="<c:url value='webstyle/js/flot/jquery.flot.time.js' />"></script>
+	<script src="<c:url value='webstyle/js/flot/jquery.flot.navigate.js' />"></script>
 	<script src="<c:url value='webstyle/js/bootstrap.min.js' />"></script>
 </body>
 </html>
