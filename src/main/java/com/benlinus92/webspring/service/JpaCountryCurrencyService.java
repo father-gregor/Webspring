@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import com.benlinus92.webspring.configuration.AppConstants;
 import com.benlinus92.webspring.dao.CountryCurrency;
 import com.benlinus92.webspring.dao.CountryCurrencyRepo;
+import com.benlinus92.webspring.dao.CurrencyNameList;
 import com.benlinus92.webspring.json.Base;
 import com.benlinus92.webspring.json.DateCurrency;
 import com.google.gson.Gson;
@@ -48,7 +49,6 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 		List<CountryCurrency> listCountry1 = dao.getListByCountryId(countryId1);
 		List<CountryCurrency> listCountry2 = dao.getListByCountryId(countryId2);
 		List<DateCurrency> currencyList = new ArrayList<DateCurrency>();
-		Map<Calendar, String> result = new LinkedHashMap<Calendar, String>();
 		Iterator<CountryCurrency> it1 = listCountry1.iterator();
 		Iterator<CountryCurrency> it2 = listCountry2.iterator();
 		while(it1.hasNext() & it2.hasNext()) {
@@ -62,14 +62,16 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 				//1 FirstCurrency = z AnotherCurrency
 				//Equation: z = (1 * y) / x
 				DateCurrency dc = new DateCurrency();
-				dc.setCurrency(currDec2.divide(currDec1, 3, RoundingMode.HALF_UP).toString());
+				dc.setCurrency(currDec2.divide(currDec1, 4, RoundingMode.HALF_UP).toString());
 				dc.setDate(this.getStringFromCalendar(country1.getCurrDate()));
 				currencyList.add(dc);
-				result.put(country1.getCurrDate(), 
-						currDec2.divide(currDec1, 3, RoundingMode.HALF_UP).toString()); 
 			}
 		}
 		return currencyList;
+	}
+	@Override
+	public List<CurrencyNameList> getCurrencyNameList() {
+		return dao.getCurrencyList();
 	}
 	@Override
 	public void updateDatabaseOnDemand(String date) {

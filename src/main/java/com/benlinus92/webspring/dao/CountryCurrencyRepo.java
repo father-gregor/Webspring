@@ -6,4 +6,5 @@ public interface CountryCurrencyRepo {
 
 	List<CountryCurrency> getListByCountryId(String countryId);
 	void insertCurrency(CountryCurrency entity);
+	List<CurrencyNameList> getCurrencyList();
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.benlinus92.webspring.dao.CurrencyNameList;
 import com.benlinus92.webspring.json.AjaxCurrencyInput;
 import com.benlinus92.webspring.json.DateCurrency;
 import com.benlinus92.webspring.service.CountryCurrencyService;
@@ -34,13 +35,21 @@ public class WebSpringController {
 	@Autowired
 	private Environment environment;
 	
+	@RequestMapping(value="/", method=RequestMethod.GET)
+	public ModelAndView getCurrenciesList() {
+		List<CurrencyNameList> list = service.getCurrencyNameList();
+		System.out.println("&&&&&&&&&&&&&&&&&& " + list.get(0)+ " &&&&&&&&&&&&&&&& " +  list.get(1));
+		ModelAndView model = new ModelAndView("/index");
+		model.addObject("currencyList", list);
+		return model;
+	}
 	@RequestMapping(value="/currency-{countryId1}-{countryId2}-{daysCount}", method=RequestMethod.GET)
 	public ModelAndView requestCurrency(@PathVariable String countryId1, @PathVariable String countryId2, 
 			@PathVariable String daysCount, Model model) {
 		service.updateDatabaseOnDemand(daysCount);
 		model.addAttribute("countryCurr",service.getListByCountryId(countryId1, countryId2));
 		return new ModelAndView("currency");
-		//return "welcome";
+		 //return "welcome";
 	}
 	@RequestMapping("/json-{date}")
 	public String requestJson(@PathVariable String date, Model model) {
@@ -64,7 +73,6 @@ public class WebSpringController {
 	public @ResponseBody List<DateCurrency> currenciesJson(@RequestBody AjaxCurrencyInput currInput) {
 		//service.updateDatabaseOnDemand(currInput.getDate());
 		//String json2 = new Gson().toJson(service.getListByCountryId(currInput.getCountryId1(), currInput.getCountryId2()));
-		System.out.println(currInput.getCountryId1());
 		//System.out.println(service.getListByCountryId(currInput.getCountryId1(), currInput.getCountryId2()).get(0).toString());
 		//return service.getListByCountryId(countryId1, countryId2);
 		return service.getListByCountryId(currInput.getCountryId1(), currInput.getCountryId2());

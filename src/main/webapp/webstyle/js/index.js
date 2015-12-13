@@ -1,10 +1,11 @@
 
 $(function() {
 	var chart = $("#placeholder");
+	var $root = $('html, body');
 	$.plot(chart, []);
 	$(".show-btn").click(function() {
-		var jscurr1 = $(".show-curr1").text();
-		var jscurr2 = $(".show-curr2").text();
+		var jscurr1 = $(".show-curr1").val();
+		var jscurr2 = $(".show-curr2").val();
 		var date = new Date();
 		var dateUTC = date.getUTCFullYear() + "-" + ("0" + (date.getUTCMonth() + 1)).slice(-2) +  "-" + ("0" + date.getUTCDate()).slice(-2);
 		var json = {
@@ -13,7 +14,7 @@ $(function() {
 				"date": dateUTC
 		};
 		
-		$("#loading-cont").append("<div class='circle1'></div>").append("<div class='circle2'></div>");
+		//$("#loading-cont").append("<div class='circle1'></div>").append("<div class='circle2'></div>");
 		$.ajax ({
 			headers: { 
 		        'Accept': 'application/json',
@@ -32,6 +33,7 @@ $(function() {
 				$.each(data, function(index, currCountry) {
 					var timestamp = new Date(currCountry.date).getTime();
 					dataTemp.push([new Date(currCountry.date).getTime(), parseFloat(currCountry.currency)]);
+					console.log(currCountry.currency);
 					if(minDate > timestamp) {
 						minDate = timestamp;
 					}
@@ -62,19 +64,17 @@ $(function() {
 						interactive: true
 					}
 				};
-				$.plot(chart, dataChart, options).fadeIn(5000);
-				chart.bind("plotzoom", function(event, plot){
-					var axes = plot.getAxes();
-					
-				});
-			},
-			complete: function(data) {
-				$("#loading-cont").delay(1500).fadeOut("slow");
+				$.plot(chart, dataChart, options);
 			},
 			error:function(data,status,er) { 
 		        alert("error: "+data+" status: "+status+" er:"+er);
 		    }
 		});
 		
+		$root.animate({
+	        scrollTop: $( $.attr(this, 'href') ).offset().top
+	    }, 700);
+		//event.preventDefault();
+		return false;
 	});
 });

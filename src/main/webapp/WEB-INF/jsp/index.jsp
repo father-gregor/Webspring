@@ -22,39 +22,53 @@
     				Select currencies and press Show
     			</div>
     		</div>
-    		<div class="row">
-				<div class="col-md-4 show-curr1">EUR</div>
-				<div class="col-md-4 show-curr2">UAH</div>
-    			<a href="#" class="col-md-4 show-btn">SHOW</a>
+    		<div class="form-inline">
+					<select class="show-curr1" title="Choose base currency">
+						<c:forEach var="currency" items="${currencyList}">
+							<c:choose>
+								<c:when test="${currency.currencyId == 'USD'}">
+									<option value="${currency.currencyId}" selected>${currency.country}</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${currency.currencyId}">${currency.country}</option>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
+					<select class="show-curr2" title="Choose counter currency">
+						<c:forEach var="currency" items="${currencyList}">
+							<c:choose>
+								<c:when test="${currency.currencyId == 'EUR'}">
+									<option value="${currency.currencyId}" selected>${currency.country}</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${currency.currencyId}">${currency.country}</option>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
+    			<a href="#placeholder" class="show-btn">SHOW</a>
     		</div>
     	</div>
     </header>
 	<div class="container">
 		<div class="row chart-row">
-			<div class="col-lg-8 col-md-10">
-				<div id="placeholder">
-					
-				</div>
-				<div id="loading-cont"></div>
+			<div class="col-lg-12 col-md-12">
+				<div id="placeholder"></div>
 			</div>
 		</div>
 	</div>
 	<div id="tests" style="text-align:center">
 		<h2>
-			Hey You..!! T his is your 1st Spring MCV Tutorial..<br> <br>
+			Hey You..!! This is your 1st Spring MCV Tutorial..<br> <br>
 		</h2>
-		<h3>
-			<a href='<c:out value="/currency-CAD-UAH-10" />'>CLICK THAT</a>
-			<a href='<c:out value="/welcome-2015-12-02" />'>OR THAT</a>
-			
-		</h3>
 	</div>
 	<div id="footer">
 		<div class="container">
 			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 				© 2015 Spring Currency Converter. All rights reserved.
 			</div>
-			<div class="pull-right">Back to top</div>
+			<div class="pull-right" id="footer-href"><a href="#">Back to top</a></div>
 		</div>
 	</div>
 	<script src="http://code.jquery.com/jquery-latest.js"></script>

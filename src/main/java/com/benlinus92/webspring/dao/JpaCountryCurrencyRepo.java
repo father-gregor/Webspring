@@ -33,4 +33,10 @@ public class JpaCountryCurrencyRepo implements CountryCurrencyRepo {
 			e.printStackTrace();
 		}
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CurrencyNameList> getCurrencyList() {
+		Query q = em.createQuery("SELECT r from CurrencyNameList r");
+		return (List<CurrencyNameList>) q.getResultList();
+	}
 }
