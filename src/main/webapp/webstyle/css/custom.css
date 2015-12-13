@@ -3,6 +3,7 @@
 	src: url(../fonts/intro_cond_light_free.otf);
 }
 body {
+	background: #d9d9d9;
 	min-width: 547px;
 }
 .navbar-default {
@@ -16,23 +17,24 @@ body {
 }
 header {
 	background: #1a1a1a;
+	width: 100%;
 	color: #fff;
 	font-family: Nord-Medium;
 	font-size: 45px;
 }
 .intro-cont {
-	padding-top: 300px;
-	padding-bottom: 200px;
+	padding-top: 200px;
+	padding-bottom: 100px;
 }
 .intro-text {
 	text-align: center;
 }
 .intro-welcome {
 	color: #72c459;
-	font-size: 65px;
+	font-size: 50px;
 }
 .intro-choice {
-	font-size: 50px;
+	font-size: 35px;
 }
 a.show-btn {
 	border: 1px solid;
@@ -40,6 +42,9 @@ a.show-btn {
 	border-color: #fff;
 	padding: 8px 12px;
 	font-size: 35px;
+}
+.chart-row {
+	padding-top: 50px;
 }
 #placeholder {
 	width: 950px ;
@@ -49,6 +54,12 @@ a.show-btn {
 	position: relative;
 	top: -200px;
 	visibility: hidden;
+}
+#footer {
+	background: #1a1a1a;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	color: #fff;
 }
 /*-- ---------------------/
 /CSS for loading animation/

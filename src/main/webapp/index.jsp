@@ -10,6 +10,7 @@
 </head>
 <body>
     <div class="navbar navbar-default">
+    	
     </div>
     <header>
     	<div class="container intro-cont">
@@ -21,16 +22,15 @@
     				Select currencies and press Show
     			</div>
     		</div>
-			<div class="show-currency">
-				<div class="show-curr1">EUR</div>
-				<div class="show-curr2">UAH</div>
-    			<a href="#" class="show-btn">SHOW</a>
+    		<div class="row">
+				<div class="col-md-4 show-curr1">EUR</div>
+				<div class="col-md-4 show-curr2">UAH</div>
+    			<a href="#" class="col-md-4 show-btn">SHOW</a>
     		</div>
     	</div>
     </header>
-	<br>
 	<div class="container">
-		<div class="row">
+		<div class="row chart-row">
 			<div class="col-lg-8 col-md-10">
 				<div id="placeholder">
 					
@@ -48,6 +48,14 @@
 			<a href='<c:out value="/welcome-2015-12-02" />'>OR THAT</a>
 			
 		</h3>
+	</div>
+	<div id="footer">
+		<div class="container">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				© 2015 Spring Currency Converter. All rights reserved.
+			</div>
+			<div class="pull-right">Back to top</div>
+		</div>
 	</div>
 	<script src="http://code.jquery.com/jquery-latest.js"></script>
 	<script src="<c:url value='webstyle/js/index.js' />"></script>
