@@ -1,6 +1,7 @@
 package com.benlinus92.webspring.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -28,7 +29,7 @@ public class JpaCountryCurrencyRepo implements CountryCurrencyRepo {
 	@Override
 	public void insertCurrency(CountryCurrency entity) {
 		try {
-			em.persist(entity);
+			em.merge(entity);
 		} catch(PersistenceException e) {
 			e.printStackTrace();
 		}
@@ -38,5 +39,10 @@ public class JpaCountryCurrencyRepo implements CountryCurrencyRepo {
 	public List<CurrencyNameList> getCurrencyList() {
 		Query q = em.createQuery("SELECT r from CurrencyNameList r");
 		return (List<CurrencyNameList>) q.getResultList();
+	}
+	@Override
+	public Calendar getLatestDate() {
+		Query q = em.createQuery("SELECT MAX(r.currDate) from CountryCurrency r");
+		return (Calendar) q.getSingleResult();
 	}
 }

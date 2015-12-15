@@ -42,6 +42,12 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	@Autowired
 	private CountryCurrencyRepo dao;
 
+	/**
+	 * Formula: 1 USD = x FirstCurrency
+	   1 USD = y SecondCurrency
+	   1 FirstCurrency = z SecondCurrency
+	   Equation: z = (1 * y) / x
+	 */
 	@Override
 	public List<DateCurrency> getListByCountryId(String countryId1,
 			String countryId2) {
@@ -57,13 +63,9 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			if(country1.getCurrDate().equals(country2.getCurrDate())) {
 				BigDecimal currDec1 = new BigDecimal(country1.getCurrency());
 				BigDecimal currDec2 = new BigDecimal(country2.getCurrency());
-				//Formula: 1 USD = x FirstCurrency
-				//1 USD = y SecondCurrency
-				//1 FirstCurrency = z AnotherCurrency
-				//Equation: z = (1 * y) / x
 				DateCurrency dc = new DateCurrency();
 				dc.setCurrency(currDec2.divide(currDec1, 4, RoundingMode.HALF_UP).toString());
-				dc.setDate(this.getStringFromCalendar(country1.getCurrDate()));
+				dc.setDate(this.convertCalendarToString(country1.getCurrDate()));
 				currencyList.add(dc);
 			}
 		}
@@ -75,34 +77,27 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	}
 	@Override
 	public void updateDatabaseOnDemand(String date) {
-		if(isDatabaseOutOfDate(date) == true) {
-			Calendar dbDate = Calendar.getInstance();
-			Calendar userDate = Calendar.getInstance();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				dbDate.setTime(sdf.parse(System.getProperty("updated")));
-				userDate.setTime(sdf.parse(date));
-			} catch(ParseException e) { 
-				e.printStackTrace();
-			}
-			dbDate.add(Calendar.DATE, 1);
-			while(dbDate.compareTo(userDate) <= 0) {
+		Calendar dbDate = Calendar.getInstance();
+		Calendar userDate = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			dbDate = dao.getLatestDate();
+			userDate.setTime(sdf.parse(date));
+			if(dbDate.before(userDate)) {
+				dbDate.add(Calendar.DATE, 1);
+				while(dbDate.compareTo(userDate) <= 0) {
+					String urlDate = sdf.format(dbDate.getTime());
+					String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
+					writeJsonToDatabase(url, dbDate);
+					dbDate.add(Calendar.DATE, 1);
+				}
+			} else {
 				String urlDate = sdf.format(dbDate.getTime());
 				String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
-				writeJsonToDatabase(url, dbDate);
-				dbDate.add(Calendar.DATE, 1);
+				writeJsonToDatabase(url, dbDate);	
 			}
-			try {
-				System.setProperty("updated", date);
-				Properties props = new Properties();
-				Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
-				OutputStream out = new FileOutputStream(r.getFile()); 
-				props.setProperty("updated", date);
-				props.store(out, null);
-				out.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
+		} catch(ParseException e) { 
+			e.printStackTrace();
 		}
 	}
 	@Override
@@ -141,23 +136,11 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			}
 			in.close();
 		} catch (Exception e) {
-			throw new RuntimeException("Exception while calling URL:"+ apiURL, e);
+			throw new RuntimeException("Exception while calling URL: "+ apiURL, e);
 		} 
 		return sb.toString();
 	}
-	private boolean isDatabaseOutOfDate(String date) {
-		Calendar dbDate = Calendar.getInstance();
-		Calendar userDate = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			dbDate.setTime(sdf.parse(System.getProperty("updated")));
-			userDate.setTime(sdf.parse(date));
-		} catch(ParseException e) { 
-			e.printStackTrace();
-		}
-		return dbDate.before(userDate);
-	}
-	private String getStringFromCalendar(Calendar date) {
+	private String convertCalendarToString(Calendar date) {
 		SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
 		return formatDate.format(date.getTime());
 	}

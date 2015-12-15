@@ -23,37 +23,38 @@
     			</div>
     		</div>
     		<div class="form-inline">
-					<select class="show-curr1" title="Choose base currency">
-						<c:forEach var="currency" items="${currencyList}">
-							<c:choose>
-								<c:when test="${currency.currencyId == 'USD'}">
-									<option value="${currency.currencyId}" selected>${currency.country}</option>
-								</c:when>
-								<c:otherwise>
-									<option value="${currency.currencyId}">${currency.country}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</select>
-					<select class="show-curr2" title="Choose counter currency">
-						<c:forEach var="currency" items="${currencyList}">
-							<c:choose>
-								<c:when test="${currency.currencyId == 'EUR'}">
-									<option value="${currency.currencyId}" selected>${currency.country}</option>
-								</c:when>
-								<c:otherwise>
-									<option value="${currency.currencyId}">${currency.country}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-					</select>
+				<select class="show-curr1" title="Choose base currency">
+					<c:forEach var="currency" items="${currencyList}">
+						<c:choose>
+							<c:when test="${currency.currencyId == 'USD'}">
+								<option value="${currency.currencyId}" selected>${currency.country}</option>
+							</c:when>
+							<c:otherwise>
+								<option value="${currency.currencyId}">${currency.country}</option>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+				</select>
+				<div id="swap-btn"></div>
+				<select class="show-curr2" title="Choose counter currency">
+					<c:forEach var="currency" items="${currencyList}">
+						<c:choose>
+							<c:when test="${currency.currencyId == 'EUR'}">
+								<option value="${currency.currencyId}" selected>${currency.country}</option>
+							</c:when>
+							<c:when test="${(currency.currencyId != 'XAU') && (currency.currencyId !='XAG')}">
+								<option value="${currency.currencyId}">${currency.country}</option>
+							</c:when>
+						</c:choose>
+					</c:forEach>
+				</select>
     			<a href="#placeholder" class="show-btn">SHOW</a>
     		</div>
     	</div>
     </header>
 	<div class="container">
 		<div class="row chart-row">
-			<div class="col-lg-12 col-md-12">
+			<div class="col-lg-12 col-md-12 chart-div" >
 				<div id="placeholder"></div>
 			</div>
 		</div>
@@ -76,6 +77,7 @@
 	<script src="<c:url value='webstyle/js/flot/jquery.flot.js' />"></script>
 	<script src="<c:url value='webstyle/js/flot/jquery.flot.time.js' />"></script>
 	<script src="<c:url value='webstyle/js/flot/jquery.flot.navigate.js' />"></script>
+	<script src="<c:url value='webstyle/js/flot/jquery.flot.resize.js' />"></script>
 	<script src="<c:url value='webstyle/js/bootstrap.min.js' />"></script>
 </body>
 </html>

@@ -38,7 +38,6 @@ public class WebSpringController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public ModelAndView getCurrenciesList() {
 		List<CurrencyNameList> list = service.getCurrencyNameList();
-		System.out.println("&&&&&&&&&&&&&&&&&& " + list.get(0)+ " &&&&&&&&&&&&&&&& " +  list.get(1));
 		ModelAndView model = new ModelAndView("/index");
 		model.addObject("currencyList", list);
 		return model;
@@ -51,30 +50,9 @@ public class WebSpringController {
 		return new ModelAndView("currency");
 		 //return "welcome";
 	}
-	@RequestMapping("/json-{date}")
-	public String requestJson(@PathVariable String date, Model model) {
-		//service.writeJsonToDatabase(CURR_API_HISTORY + date + CURR_API_ID
-			//	+ CURR_API_SET + "AUD,CHF,EUR,GBP,PLN");
-		return "welcome";
-	}
-	@RequestMapping("/welcome-{date}")
-	public String viewText(@PathVariable String date, Model model) {
-		System.out.println("Before database update: " + System.getProperty("updated"));
-		long startTime = System.currentTimeMillis();
-		service.updateDatabaseOnDemand(date);
-		long endTime = System.currentTimeMillis();
-		System.out.println("Before database update: " + System.getProperty("updated") + "; exec time = " + (endTime-startTime));
-		String w = System.getProperty("updated");
-		model.addAttribute("message2", w);
-		//return new ModelAndView("welcome", "message", json);
-		return "welcome";
-	}
 	@RequestMapping(value="/getcurrencies", method=RequestMethod.POST)
 	public @ResponseBody List<DateCurrency> currenciesJson(@RequestBody AjaxCurrencyInput currInput) {
-		//service.updateDatabaseOnDemand(currInput.getDate());
-		//String json2 = new Gson().toJson(service.getListByCountryId(currInput.getCountryId1(), currInput.getCountryId2()));
-		//System.out.println(service.getListByCountryId(currInput.getCountryId1(), currInput.getCountryId2()).get(0).toString());
-		//return service.getListByCountryId(countryId1, countryId2);
+		service.updateDatabaseOnDemand(currInput.getDate());
 		return service.getListByCountryId(currInput.getCountryId1(), currInput.getCountryId2());
 	}
 }

@@ -22,15 +22,6 @@ public class WebSpringInitializer extends AbstractAnnotationConfigDispatcherServ
 
 	@Override
 	protected String[] getServletMappings() {
-		Resource r = new FileSystemResource(AppConstants.PROPERTIES_PATH);
-		Properties props = new Properties();
-		try {
-			InputStream stream = r.getInputStream();
-			props.load(stream);
-			System.setProperty("updated", props.getProperty("updated"));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
 		return new String[] {"/"};
 	}
 }
