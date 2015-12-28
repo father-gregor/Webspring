@@ -104,6 +104,10 @@ a.show-btn:hover {
 	border-radius: 7px;
 	padding: 20px;
 }
+#currency-title {
+	font-size: 30px;
+	color: #333;
+}
 #placeholder {
 	/*width: 950px;*/
 	height: 500px;
@@ -116,6 +120,28 @@ a.show-btn:hover {
 	border-radius: 3px;
 	background: #1a1a1a;
 	color: #fff;
+}
+#currency-info {
+	margin-top: 30px;
+	padding-left: 10px;
+}
+#curr-column1-newest {
+	font-size: 27px;
+	font-weight: bold;
+	padding-right: 10px;
+	display: table-cell;
+}
+#curr-column1-diff {
+	font-size: 20px;
+	padding-right: 5px;
+	display: table-cell;
+}
+#curr-column1-percent {
+	font-size: 20px;
+	display: table-cell;
+}
+#curr-column1-pair {
+	color: #8c8c8c;
 }
 #loading-cont {
 	position: relative;

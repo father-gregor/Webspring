@@ -30,7 +30,11 @@ $(function() {
 			success: function(data) {
 				var dataTemp = [];
 				dataObject = data;
-				var minCurrency = data[data.length-1].currency; //data[data.length].currency;
+				//variables for flot minimum and maximum currency on the first plot's drawing.
+				var baseMinCurrency = data[data.length-1].currency;
+				var baseMaxCurrency = 0;
+				//variables for plot minimum and maximum currency overall
+				var minCurrency = data[data.length-1].currency;
 				var maxCurrency = 0;
 				//variables for flot minimum and maximum dates on the first plot's drawing.
 				//dateOffset represent 30 days in milliseconds; using for subtract 30 days from baseMaxDate
@@ -51,11 +55,17 @@ $(function() {
 						maxDate = timestamp;
 						baseMaxDate = timestamp;
 					}
-					if((index >= (data.length-30)) && (minCurrency > currCountry.currency)) {
+					if(minCurrency > currCountry.currency) {
 						minCurrency = currCountry.currency;
 					}
-					if((index >= (data.length-30)) && (maxCurrency < currCountry.currency)) {
+					if(maxCurrency < currCountry.currency) {
 						maxCurrency = currCountry.currency;
+					}
+					if((index >= (data.length-30)) && (baseMinCurrency > currCountry.currency)) {
+						baseMinCurrency = currCountry.currency;
+					}
+					if((index >= (data.length-30)) && (baseMaxCurrency < currCountry.currency)) {
+						baseMaxCurrency = currCountry.currency;
 					}
 		        }); 
 				baseMinDate = baseMaxDate - dateOffset;
@@ -90,8 +100,8 @@ $(function() {
 						panRange: [minDate, maxDate] 
 					},
 					yaxis: {
-						min: minCurrency/1.01,
-						max: maxCurrency,
+						min: baseMinCurrency/1.01,
+						max: baseMaxCurrency,
 						zoomRange:  false,
 						panRange: false 
 					},
@@ -103,7 +113,9 @@ $(function() {
 						interactive: true
 					}
 				};
+				$("#currency-title").html(jscurr1 + " — " + jscurr2);
 				plotObject = $.plot(chart, dataChart, options);
+				showCurrencyInfo(minCurrency, maxCurrency).fadeIn();
 			},
 			error:function(data,status,er) { 
 		        alert("error: "+data+" status: "+status+" er:"+er);
@@ -191,4 +203,34 @@ $(function() {
 			$(".show-curr2").val(currValue1);
 		}
 	});
+	function showCurrencyInfo(minC, maxC) {
+		var currDynamic = dataObject[dataObject.length-1].currency - dataObject[dataObject.length-2].currency;
+		var procentDynamic = Math.abs(currDynamic/dataObject[dataObject.length-1].currency) * 100;
+		var colorDynamic = null;
+		if(currDynamic >= 0) {
+			colorDynamic = "green";
+		} else {
+			colorDynamic = "red";
+		}
+		$("#curr-column1-newest").html(dataObject[dataObject.length-1].currency);
+		$("#curr-column1-diff").html(Math.ceil(currDynamic * 100)/100).css("color", colorDynamic);
+		$("#curr-column1-percent").html("(" + Math.ceil(procentDynamic * 100)/100 + "%)").css("color", colorDynamic);
+		
+		var monthNames = ["January", "February", "March", "April", "May", "June",
+		                  "July", "August", "September", "October", "November", "December"];
+		var month = monthNames[new Date(dataObject[dataObject.length-1].date).getUTCMonth()];
+		var day = ("0" + new Date(dataObject[dataObject.length-1].date).getUTCDate()).slice(-2);
+		var year = new Date(dataObject[dataObject.length-1].date).getUTCFullYear()
+		$("#curr-column1-date").html(month + " " + day + ", " + year);
+		$("#curr-column1-pair").html("Pair " + jscurr1 + " - " + jscurr2);
+		$("#curr-column2-days").html("<div style='display:table-cell;color:#8c8c8c;padding-right:3px'>Total in chart: </div>" +
+				"<div style='display:table-cell'>" + dataObject.length + " days</div>");
+		$("#curr-column2-range").html("<div style='display:table-cell;color:#8c8c8c;padding-right:3px'>Range: </div>" + 
+				"<div style='display:table-cell'>" + minC + " - " + maxC + "</div>");
+		
+		/*$("#exch-1").html("1 " + jscurr1 + " = " + dataObject[dataObject.length-1].currency + " " + jscurr2);
+		$("#exch-10").html("10 " + jscurr1 + " = " + (dataObject[dataObject.length-1].currency*10) + " " + jscurr2);
+		$("#exch-100").html("100 " + jscurr1 + " = " + (dataObject[dataObject.length-1].currency*100) + " " + jscurr2);
+		$("#exch-1000").html("1000 " + jscurr1 + " = " + (dataObject[dataObject.length-1].currency*1000) + " " + jscurr2);*/
+	}
 });

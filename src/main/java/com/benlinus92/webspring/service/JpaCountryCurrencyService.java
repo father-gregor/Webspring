@@ -81,19 +81,24 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 		Calendar userDate = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
+			String urlDate = null;
+			String url = null;
 			dbDate = dao.getLatestDate();
 			userDate.setTime(sdf.parse(date));
 			if(dbDate.before(userDate)) {
+				urlDate = sdf.format(dbDate.getTime());
+				url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
+				updateEntityInDatabase(url, dbDate);
 				dbDate.add(Calendar.DATE, 1);
 				while(dbDate.compareTo(userDate) <= 0) {
-					String urlDate = sdf.format(dbDate.getTime());
-					String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
+					urlDate = sdf.format(dbDate.getTime());
+					url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
 					writeEntityToDatabase(url, dbDate);
 					dbDate.add(Calendar.DATE, 1);
 				}
 			} else {
-				String urlDate = sdf.format(dbDate.getTime());
-				String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
+				urlDate = sdf.format(dbDate.getTime());
+				url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
 				updateEntityInDatabase(url, dbDate);	
 			}
 		} catch(ParseException e) { 
