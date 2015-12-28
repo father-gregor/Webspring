@@ -118,6 +118,7 @@ $(function() {
 	chart.bind('plothover', function (event, pos, item) {
 	    if (item) {
 	    	if (previousPoint != item.dataIndex) {
+	    		var itemDate = new Date(item.datapoint[0]);
 	    		previousPoint = item.dataIndex;
 	            $('#tooltip').remove();
 	            var x = itemDate.getUTCFullYear() + "-" + ("0" + (itemDate.getUTCMonth() + 1)).slice(-2) +  "-" + ("0" + itemDate.getUTCDate()).slice(-2),

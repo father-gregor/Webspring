@@ -11,7 +11,8 @@ public interface CountryCurrencyService {
 	
 	List<DateCurrency> getListByCountryId(String countryId1, String countryId2);
 	List<CurrencyNameList> getCurrencyNameList();
-	void writeJsonToDatabase(String url, Calendar date);
+	void writeEntityToDatabase(String url, Calendar date);
+	void updateEntityInDatabase(String url, Calendar date);
 	String readJsonFromUrl(String url);
 	void updateDatabaseOnDemand(String date);
 }

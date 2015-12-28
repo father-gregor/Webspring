@@ -88,20 +88,20 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 				while(dbDate.compareTo(userDate) <= 0) {
 					String urlDate = sdf.format(dbDate.getTime());
 					String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
-					writeJsonToDatabase(url, dbDate);
+					writeEntityToDatabase(url, dbDate);
 					dbDate.add(Calendar.DATE, 1);
 				}
 			} else {
 				String urlDate = sdf.format(dbDate.getTime());
 				String url = AppConstants.CURR_API_HISTORY + urlDate + AppConstants.CURR_API_SET + AppConstants.CURR_API_RATESLIST;
-				writeJsonToDatabase(url, dbDate);	
+				updateEntityInDatabase(url, dbDate);	
 			}
 		} catch(ParseException e) { 
 			e.printStackTrace();
 		}
 	}
 	@Override
-	public void writeJsonToDatabase(String apiURL, Calendar date) {
+	public void writeEntityToDatabase(String apiURL, Calendar date) {
 		String apiJson = readJsonFromUrl(apiURL);
 		Gson gson = new Gson();
 		Base baseJson = gson.fromJson(apiJson, Base.class);
@@ -110,6 +110,18 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			String currency = entry.getValue();
 			CountryCurrency entity = new CountryCurrency(country, currency, date);
 			dao.insertCurrency(entity);
+		}
+	}
+	@Override
+	public void updateEntityInDatabase(String apiURL, Calendar date) {
+		String apiJson = readJsonFromUrl(apiURL);
+		Gson gson = new Gson();
+		Base baseJson = gson.fromJson(apiJson, Base.class);
+		for(Map.Entry<String, String> entry : baseJson.getQuotes().entrySet()) {
+			String country = entry.getKey().replaceFirst("USD", "");
+			String currency = entry.getValue();
+			CountryCurrency entity = new CountryCurrency(country, currency, date);
+			dao.updateCurrency(entity);
 		}
 	}
 	@Override

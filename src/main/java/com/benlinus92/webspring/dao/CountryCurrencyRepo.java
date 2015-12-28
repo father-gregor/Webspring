@@ -7,6 +7,7 @@ public interface CountryCurrencyRepo {
 
 	List<CountryCurrency> getListByCountryId(String countryId);
 	void insertCurrency(CountryCurrency entity);
+	void updateCurrency(CountryCurrency entity);
 	List<CurrencyNameList> getCurrencyList();
 	Calendar getLatestDate();
 }

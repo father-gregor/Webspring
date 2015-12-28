@@ -29,7 +29,19 @@ public class JpaCountryCurrencyRepo implements CountryCurrencyRepo {
 	@Override
 	public void insertCurrency(CountryCurrency entity) {
 		try {
-			em.merge(entity);
+			em.persist(entity);
+		} catch(PersistenceException e) {
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void updateCurrency(CountryCurrency entity) {
+		try {
+			Query q = em.createQuery("SELECT r from CountryCurrency r WHERE r.country = :countryId AND r.currDate = :date", CountryCurrency.class);
+			q.setParameter("countryId", entity.getCountry());
+			q.setParameter("date", entity.getCurrDate());
+			CountryCurrency cc = em.find(CountryCurrency.class, ((CountryCurrency) q.getSingleResult()).getId());
+			cc.setCurrency(entity.getCurrency());
 		} catch(PersistenceException e) {
 			e.printStackTrace();
 		}
