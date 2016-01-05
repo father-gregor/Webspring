@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
@@ -31,7 +35,8 @@ import com.benlinus92.webspring.dao.CountryCurrency;
 import com.benlinus92.webspring.dao.CountryCurrencyRepo;
 import com.benlinus92.webspring.dao.CurrencyNameList;
 import com.benlinus92.webspring.json.Base;
-import com.benlinus92.webspring.json.DateCurrency;
+import com.benlinus92.webspring.json.DateCurrencyPair;
+import com.benlinus92.webspring.json.News;
 import com.google.gson.Gson;
 
 @Service("employeeService")
@@ -49,12 +54,12 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 	   Equation: z = (1 * y) / x
 	 */
 	@Override
-	public List<DateCurrency> getListByCountryId(String countryId1,
+	public List<DateCurrencyPair> getListByCountryId(String countryId1,
 			String countryId2) {
 		
 		List<CountryCurrency> listCountry1 = dao.getListByCountryId(countryId1);
 		List<CountryCurrency> listCountry2 = dao.getListByCountryId(countryId2);
-		List<DateCurrency> currencyList = new ArrayList<DateCurrency>();
+		List<DateCurrencyPair> currencyList = new ArrayList<DateCurrencyPair>();
 		Iterator<CountryCurrency> it1 = listCountry1.iterator();
 		Iterator<CountryCurrency> it2 = listCountry2.iterator();
 		while(it1.hasNext() & it2.hasNext()) {
@@ -63,7 +68,7 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			if(country1.getCurrDate().equals(country2.getCurrDate())) {
 				BigDecimal currDec1 = new BigDecimal(country1.getCurrency());
 				BigDecimal currDec2 = new BigDecimal(country2.getCurrency());
-				DateCurrency dc = new DateCurrency();
+				DateCurrencyPair dc = new DateCurrencyPair();
 				dc.setCurrency(currDec2.divide(currDec1, 4, RoundingMode.HALF_UP).toString());
 				dc.setDate(this.convertCalendarToString(country1.getCurrDate()));
 				currencyList.add(dc);
@@ -156,6 +161,27 @@ public class JpaCountryCurrencyService implements CountryCurrencyService {
 			throw new RuntimeException("Exception while calling URL: "+ apiURL, e);
 		} 
 		return sb.toString();
+	}
+	@Override
+	public List<News> getNewsByCountryId(String countryId) {
+		String url = AppConstants.GOOGLE_NEWS_URL + countryId;
+		List<News> newsList = new ArrayList<News>();
+		try {
+			Document doc = Jsoup.connect(url).get();
+			Elements elems = doc.select("div.g-section.news.sfe-break-bottom-16");
+			if(elems != null) {
+				for(Element e: elems) {
+					String header = e.getElementById("n-cn-").text();
+					String link = e.getElementById("n-cn-").attr("href");
+					String source = e.getElementsByClass("src").first().text();
+					String date = e.getElementsByClass("date").first().text();
+					newsList.add(new News(header, link, source, date));
+				}
+			}
+		} catch(IOException ex) {
+			ex.printStackTrace();
+		}
+		return newsList; 
 	}
 	private String convertCalendarToString(Calendar date) {
 		SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");

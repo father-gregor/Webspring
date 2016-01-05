@@ -8,6 +8,10 @@ $(function() {
 	var jscurr2 = "";
 	$.plot(chart, [], {grid: {borderColor: 'transparent'}});
 	$(".show-btn").click(function() {
+		var cssTop = chart.height()*0.46 + "px";
+		var cssLeft = chart.width()*0.46 + "px";
+		var style = {"top": cssTop, "left": cssLeft};
+		$("<div id='loading-msg'></div>").css(style).insertAfter("#placeholder");
 		jscurr1 = $(".show-curr1").val();
 		jscurr2 = $(".show-curr2").val();
 		var date = new Date();
@@ -17,7 +21,6 @@ $(function() {
 				"countryid2": jscurr2, 
 				"date": dateUTC
 		};
-		//$("#loading-cont").append("<div class='circle1'></div>").append("<div class='circle2'></div>");
 		$.ajax ({
 			headers: { 
 		        'Accept': 'application/json',
@@ -47,7 +50,6 @@ $(function() {
 				$.each(data, function(index, currCountry) {
 					var timestamp = new Date(currCountry.date).getTime();
 					dataTemp.push([new Date(currCountry.date).getTime(), parseFloat(currCountry.currency)]);
-					console.log(currCountry.currency);
 					if(minDate > timestamp) {
 						minDate = timestamp;
 					}
@@ -84,6 +86,10 @@ $(function() {
 						color: '#72c459',
 						shadowSize: 0 
 					},
+					/*crosshair: {
+						mode: "xy",
+						color: "#ff3333"
+					},*/
 					grid: {
 						color: '#646464',
 						borderColor: 'transparent',
@@ -113,19 +119,47 @@ $(function() {
 						interactive: true
 					}
 				};
+				$("#loading-msg").remove();
 				$("#currency-title").html(jscurr1 + " — " + jscurr2);
 				plotObject = $.plot(chart, dataChart, options);
-				showCurrencyInfo(minCurrency, maxCurrency).fadeIn();
+				showCurrencyInfo(minCurrency, maxCurrency);
 			},
-			error:function(data,status,er) { 
+			error: function(data, status, er) { 
+				$("#loading-msg").remove();
 		        alert("error: "+data+" status: "+status+" er:"+er);
 		    }
+		});
+		
+		$.ajax({
+			headers: { 
+		        'Accept': 'application/json',
+		        'Content-Type': 'application/json' 
+		    },
+			type: "GET",
+			url: "/getnews",
+			data: "countryId=" + jscurr1,
+			dataType: "json",
+			success: function(data) {
+				$.each(data,function(index, newsItem) {
+					if(index < 4) {
+						var idNews = "#ni-"+ index; 
+						$(idNews + " .news-link").attr("href",newsItem.link);
+						$(idNews + " .news-link").text(newsItem.header);
+						$(idNews + " .news-src").text(newsItem.source + " — ");
+						$(idNews + " .news-date").text(newsItem.date);
+					}
+				});
+			},
+			error: function(data, status, er) {
+				alert("error: "+data+" status: "+status+" er:"+er);
+			}
 		});
 		$root.animate({
 	        scrollTop: $( $.attr(this, 'href') ).offset().top
 	    }, 700);
 		return false;
 	});
+	$(".show-btn").trigger("click");
 	var previousPoint = null;
 	chart.bind('plothover', function (event, pos, item) {
 	    if (item) {
@@ -137,23 +171,7 @@ $(function() {
                 	y = item.datapoint[1];
 	            showTooltip(item.pageX, item.pageY, y + ' ' + jscurr2 + ' at ' + x);
 	    	}
-	        /*if (previousPoint != item.dataIndex) {
-		    	var itemDate = new Date(item.datapoint[0]);
-		    	itemDate.setUTCHours(0,0,0,0);
-		    	var pointDate = new Date(pos.x);
-		    	pointDate.setUTCHours(0,0,0,0);
-		    	previousPoint = item.dataIndex;
-	            $('#tooltip').remove();
-		    	console.log(itemDate.getUTCDate() + " " + pointDate.getUTCDate());
-	        	if(itemDate.getTime() == pointDate.getTime()) {
-		        	item.series.points.radius = 3;
-		            var x = itemDate.getUTCFullYear() + "-" + ("0" + (itemDate.getUTCMonth() + 1)).slice(-2) +  "-" + ("0" + itemDate.getUTCDate()).slice(-2),
-		                y = item.datapoint[1];
-		            showTooltip(item.pageX, item.pageY, y + ' ' + jscurr2 + ' at ' + x);
-	        	}
-	        }*/
 	    } else {
-	    	//item.series.points.radius = 0;
 	        $('#tooltip').remove();
 	        previousPoint = null;
 	    }
@@ -170,7 +188,6 @@ $(function() {
 		var maxDateXaxis = new Date(plot.getAxes().xaxis.max);
 		maxDateXaxis.setUTCHours(0,0,0,0);
 		var indexMin = null;
-		var indexMax = null;
 		minCurrency = 0;
 		maxCurrency = 0;
 		$.each(dataObject, function(index, currCountry) {
@@ -180,18 +197,17 @@ $(function() {
 				indexMin = index;
 				minCurrency = currCountry.currency;
 			}
-			if((indexMin != null) & (indexMax == null) & (minCurrency > currCountry.currency)) {
-				minCurrency = currCountry.currency;
+			if(indexMin != null) {
+				if(Number(minCurrency) > Number(currCountry.currency))
+					minCurrency = currCountry.currency;
+				if(Number(maxCurrency) < Number(currCountry.currency))
+					maxCurrency = currCountry.currency;
 			}
-			if((indexMin != null) & (indexMax == null) & (maxCurrency < currCountry.currency)) {
-				maxCurrency = currCountry.currency;
-			}
-			if(currDate.getTime() == maxDateXaxis.getTime()) {
-				indexMax = index;
-			}
+			if(currDate.getTime() == maxDateXaxis.getTime())
+				return false;
 		});
 		plotObject.getOptions().yaxes[0].min = minCurrency/1.01;
-		plotObject.getOptions().yaxes[0].max = maxCurrency;
+		plotObject.getOptions().yaxes[0].max = maxCurrency;;
 		plotObject.setupGrid();
 		plotObject.draw();
 	});
@@ -202,6 +218,7 @@ $(function() {
 			$(".show-curr1").val(currValue2);
 			$(".show-curr2").val(currValue1);
 		}
+		return false;
 	});
 	function showCurrencyInfo(minC, maxC) {
 		var currDynamic = dataObject[dataObject.length-1].currency - dataObject[dataObject.length-2].currency;

@@ -1,6 +1,6 @@
 package com.benlinus92.webspring.json;
 
-public class DateCurrency {
+public class DateCurrencyPair {
 	private String currency;
 	private String date;
 	

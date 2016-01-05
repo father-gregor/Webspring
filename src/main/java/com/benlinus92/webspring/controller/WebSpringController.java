@@ -22,7 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.benlinus92.webspring.dao.CurrencyNameList;
 import com.benlinus92.webspring.json.AjaxCurrencyInput;
-import com.benlinus92.webspring.json.DateCurrency;
+import com.benlinus92.webspring.json.DateCurrencyPair;
+import com.benlinus92.webspring.json.News;
 import com.benlinus92.webspring.service.CountryCurrencyService;
 import com.google.gson.Gson;
 
@@ -51,8 +52,12 @@ public class WebSpringController {
 		 //return "welcome";
 	}
 	@RequestMapping(value="/getcurrencies", method=RequestMethod.POST)
-	public @ResponseBody List<DateCurrency> currenciesJson(@RequestBody AjaxCurrencyInput currInput) {
+	public @ResponseBody List<DateCurrencyPair> currenciesJson(@RequestBody AjaxCurrencyInput currInput) {
 		service.updateDatabaseOnDemand(currInput.getDate());
 		return service.getListByCountryId(currInput.getCountryId1(), currInput.getCountryId2());
+	}
+	@RequestMapping(value="/getnews", method=RequestMethod.GET)
+	public @ResponseBody List<News> currenciesNews(@RequestParam("countryId") String countryId) {
+		return service.getNewsByCountryId(countryId);
 	}
 }

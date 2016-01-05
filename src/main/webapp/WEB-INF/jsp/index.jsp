@@ -35,7 +35,7 @@
 						</c:choose>
 					</c:forEach>
 				</select>
-				<div id="swap-btn"></div>
+				<div id="swap-btn"><a href="#" id="swap-btn"></a></div>
 				<select class="show-curr2" title="Choose counter currency">
 					<c:forEach var="currency" items="${currencyList}">
 						<c:choose>
@@ -48,17 +48,17 @@
 						</c:choose>
 					</c:forEach>
 				</select>
-    			<a href="#placeholder" class="show-btn">SHOW</a>
+    			<a href="#currency-title" class="show-btn text-center">Show</a>
     		</div>
     	</div>
     </header>
-	<div class="container">
+	<div class="container chart-cont">
 		<div class="row chart-row">
 			<div class="col-lg-12 col-md-12 chart-div" >
 				<div class="text-center" id="currency-title"></div>
 				<div id="placeholder"></div>
 				<div id="currency-info">
-					<table style="font-size:15px">
+					<table class="center-block" style="font-size:15px;width:500px;">
 						<tr>
 							<td>
 								<div id="curr-column1-newest"></div>
@@ -86,11 +86,37 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div id="tests" style="text-align:center">
-		<h2>
-			Hey You..!! This is your 1st Spring MCV Tutorial..<br> <br>
-		</h2>
+		<div id="news-title">FINANCE NEWS</div>
+		<div style="display:inline-block; width: 100%; text-align:center;">
+			<div class="news-item" id="ni-0">
+				<div class="link-div"><a class="news-link" href="" target="_blank"></a></div>
+				<div class="src-date">
+					<span class="news-src"></span>
+					<span class="news-date"></span>
+				</div>
+			</div>
+			<div class="news-item" id="ni-1">
+				<div class="link-div"><a class="news-link" href="" target="_blank"></a></div>
+				<div class="src-date">
+					<span class="news-src"></span>
+					<span class="news-date"></span>
+				</div>
+			</div>
+			<div class="news-item" id="ni-2">
+				<div class="link-div"><a class="news-link" href="" target="_blank"></a></div>
+				<div class="src-date">
+					<span class="news-src"></span>
+					<span class="news-date"></span>
+				</div>
+			</div>
+			<div class="news-item" id="ni-3">
+				<div class="link-div"><a class="news-link" href="" target="_blank"></a></div>
+				<div class="src-date">
+					<span class="news-src"></span>
+					<span class="news-date"></span>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div id="footer">
 		<div class="container">
@@ -106,6 +132,8 @@
 	<script src="<c:url value='webstyle/js/flot/jquery.flot.time.js' />"></script>
 	<script src="<c:url value='webstyle/js/flot/jquery.flot.navigate.js' />"></script>
 	<script src="<c:url value='webstyle/js/flot/jquery.flot.resize.js' />"></script>
+	<script src="<c:url value='webstyle/js/flot/jquery.flot.crosshair.js' />"></script>
+	<script src="<c:url value='webstyle/js/flot/jquery.flot.touch.js' />"></script>
 	<script src="<c:url value='webstyle/js/bootstrap.min.js' />"></script>
 </body>
 </html>
