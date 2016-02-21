@@ -145,7 +145,7 @@ $(function() {
 						var idNews = "#ni-"+ index; 
 						$(idNews + " .news-link").attr("href",newsItem.link);
 						$(idNews + " .news-link").text(newsItem.header);
-						$(idNews + " .news-src").text(newsItem.source + " — ");
+						$(idNews + " .news-src").text(newsItem.source + " - ");
 						$(idNews + " .news-date").text(newsItem.date);
 					}
 				});

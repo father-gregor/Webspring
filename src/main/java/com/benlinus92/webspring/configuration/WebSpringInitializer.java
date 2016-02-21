@@ -1,11 +1,5 @@
 package com.benlinus92.webspring.configuration;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class WebSpringInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
